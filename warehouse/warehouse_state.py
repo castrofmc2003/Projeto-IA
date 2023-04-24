@@ -33,31 +33,31 @@ class WarehouseState(State[Action]):
         return self.line_forklift != 0
 
     def can_move_right(self) -> bool:
-        return self.column_forklift != self.columns - 1
+        return self.column_forklift == self.columns - 1
 
     def can_move_down(self) -> bool:
-        return self.line_forklift != self.rows - 1
+        return self.line_forklift == self.rows - 1
 
     def can_move_left(self) -> bool:
-        return self.column_forklift != 0
+        return self.column_forklift == 0
 
     def move_up(self) -> None:
-        self.matrix[self.line_forklift][self.column_forklift] = self.matrix[self.line_forklift - 1][self.column_forklift]
+        self.matrix[self.line_forklift][self.column_forklift] = constants.EMPTY
         self.line_forklift -= 1
         self.matrix[self.line_forklift][self.column_forklift] = constants.FORKLIFT
 
     def move_right(self) -> None:
-        self.matrix[self.line_forklift][self.column_forklift] = self.matrix[self.line_forklift][self.column_forklift + 1]
+        self.matrix[self.line_forklift][self.column_forklift] = constants.EMPTY
         self.column_forklift += 1
         self.matrix[self.line_forklift][self.column_forklift] = constants.FORKLIFT
 
     def move_down(self) -> None:
-        self.matrix[self.line_forklift][self.column_forklift] = self.matrix[self.line_forklift + 1][self.column_forklift]
+        self.matrix[self.line_forklift][self.column_forklift] = constants.EMPTY
         self.line_forklift += 1
         self.matrix[self.line_forklift][self.column_forklift] = constants.FORKLIFT
 
     def move_left(self) -> None:
-        self.matrix[self.line_forklift][self.column_forklift] = self.matrix[self.line_forklift][self.column_forklift - 1]
+        self.matrix[self.line_forklift][self.column_forklift] = constants.EMPTY
         self.column_forklift -= 1
         self.matrix[self.line_forklift][self.column_forklift] = constants.FORKLIFT
 

@@ -18,9 +18,11 @@ from ga.genetic_operators.recombination2 import Recombination2
 from ga.genetic_operators.recombination_pmx import RecombinationPMX
 from ga.genetic_operators.mutation_insert import MutationInsert
 from ga.genetic_algorithm_thread import GeneticAlgorithmThread
+from warehouse.cell import Cell
 from warehouse.warehouse_agent_search import WarehouseAgentSearch, read_state_from_txt_file
 from warehouse.warehouse_experiments_factory import WarehouseExperimentsFactory
 from warehouse.warehouse_problemforGA import WarehouseProblemGA
+from warehouse.warehouse_problemforSearch import WarehouseProblemSearch
 from warehouse.warehouse_state import WarehouseState
 
 matplotlib.use("TkAgg")
@@ -620,6 +622,26 @@ class SearchSolver(threading.Thread):
     def run(self):
         # TODO calculate pairs distances
 
+        #criar um ciclo for
+
+        p = self.agent.pairs[0]
+
+        cell1 = copy(p.cell1)
+        cell2 = copy(p.cell2)
+        # alterar as coordenadas da cell 1 se for diferente de um agent
+
+        state = copy(self.agent.initial_environment)
+        state.setAgent (cell1)
+
+        # alterar as coordenadas da cell 2 se for diferente da porta
+        problem = WarehouseProblemSearch(state, cell2)
+
+        solution = self.agent.solve_problem(problem)
+
+        p.value = solution.cost()
+
+        self.text_problem.delte("1.0", "end")
+        self.text_problem.insert(tk.END, str(self.agent))
 
         self.agent.search_method.stopped=True
         self.gui.problem_ga = WarehouseProblemGA(self.agent)
@@ -642,6 +664,7 @@ class SolutionRunner(threading.Thread):
         self.thread_running = False
 
     def run(self):
+
         self.thread_running = True
         forklift_path, steps = self.best_in_run.obtain_all_path()
         old_cell = [None] * len(forklift_path)

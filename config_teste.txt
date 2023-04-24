@@ -1,4 +1,4 @@
-Runs: 2
+Runs: 40
 
 Population_size: 100
 
