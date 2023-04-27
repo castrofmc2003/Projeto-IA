@@ -30,16 +30,21 @@ class WarehouseState(State[Action]):
                     self.column_exit = j
 
     def can_move_up(self) -> bool:
-        return self.line_forklift != 0
+        #can move up if the line above the forklift is empty
+        return self.matrix[self.line_forklift - 1][self.column_forklift] == constants.EMPTY
+
 
     def can_move_right(self) -> bool:
-        return self.column_forklift == self.columns - 1
+        #can move right if the column to the right of the forklift is empty
+        return self.matrix[self.line_forklift][self.column_forklift + 1] == constants.EMPTY
 
     def can_move_down(self) -> bool:
-        return self.line_forklift == self.rows - 1
+        #can move down if the line below the forklift is empty
+        return self.matrix[self.line_forklift + 1][self.column_forklift] == constants.EMPTY
 
     def can_move_left(self) -> bool:
-        return self.column_forklift == 0
+        #can move left if the column to the left of the forklift is empty
+        return self.matrix[self.line_forklift][self.column_forklift - 1] == constants.EMPTY
 
     def move_up(self) -> None:
         self.matrix[self.line_forklift][self.column_forklift] = constants.EMPTY
