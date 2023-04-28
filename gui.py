@@ -622,26 +622,24 @@ class SearchSolver(threading.Thread):
     def run(self):
         # TODO calculate pairs distances
 
-        #criar um ciclo for
 
-        p = self.agent.pairs[0]
+        # do the cicle for to calculate pairs distances
 
-        cell1 = copy(p.cell1)
-        cell2 = copy(p.cell2)
-        # alterar as coordenadas da cell 1 se for diferente de um agent
 
-        state = copy(self.agent.initial_environment)
-        state.setAgent (cell1)
 
-        # alterar as coordenadas da cell 2 se for diferente da porta
-        problem = WarehouseProblemSearch(state, cell2)
-
-        solution = self.agent.solve_problem(problem)
-
-        p.value = solution.cost()
-
-        self.text_problem.delte("1.0", "end")
-        self.text_problem.insert(tk.END, str(self.agent))
+        # # alterar as coordenadas da cell 1 se for diferente de um agent
+        # state = self.agent.problem.initial
+        # state.warehouse.cells[cell1[0]][cell1[1]] = Cell(cell1[0], cell1[1], constants.EMPTY)
+        #
+        # # alterar as coordenadas da cell 2 se for diferente da porta
+        # problem = WarehouseProblemSearch(state, cell2)
+        #
+        # solution = self.agent.solve_problem(problem)
+        #
+        # p.value = solution.cost()
+        #
+        # self.text_problem.delete("1.0", "end")
+        # self.text_problem.insert(tk.END, str(self.agent))
 
         self.agent.search_method.stopped=True
         self.gui.problem_ga = WarehouseProblemGA(self.agent)

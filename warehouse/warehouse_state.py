@@ -33,7 +33,6 @@ class WarehouseState(State[Action]):
         #can move up if the line above the forklift is empty
         return self.matrix[self.line_forklift - 1][self.column_forklift] == constants.EMPTY
 
-
     def can_move_right(self) -> bool:
         #can move right if the column to the right of the forklift is empty
         return self.matrix[self.line_forklift][self.column_forklift + 1] == constants.EMPTY
