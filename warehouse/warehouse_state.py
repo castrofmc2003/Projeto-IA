@@ -30,20 +30,28 @@ class WarehouseState(State[Action]):
                     self.column_exit = j
 
     def can_move_up(self) -> bool:
-        #can move up if the line above the forklift is empty
-        return self.matrix[self.line_forklift - 1][self.column_forklift] == constants.EMPTY
+        #can move up if the line above the forklift is empty and is not null (not out of bounds)
+        if self.line_forklift != 0:
+            return self.matrix[self.line_forklift - 1][self.column_forklift] == constants.EMPTY
+        return False
 
     def can_move_right(self) -> bool:
-        #can move right if the column to the right of the forklift is empty
-        return self.matrix[self.line_forklift][self.column_forklift + 1] == constants.EMPTY
+        #can move right if the column to the right of the forklift is empty and is not null (not out of bounds)
+        if self.column_forklift != self.columns - 1:
+            return self.matrix[self.line_forklift][self.column_forklift + 1] == constants.EMPTY or self.matrix[self.line_forklift][self.column_forklift + 1] == constants.EXIT
+        return False
 
     def can_move_down(self) -> bool:
-        #can move down if the line below the forklift is empty
-        return self.matrix[self.line_forklift + 1][self.column_forklift] == constants.EMPTY
+        #can move down if the line below the forklift is empty and is not null (not out of bounds)
+        if self.line_forklift != self.rows - 1:
+            return self.matrix[self.line_forklift + 1][self.column_forklift] == constants.EMPTY
+        return False
 
     def can_move_left(self) -> bool:
-        #can move left if the column to the left of the forklift is empty
-        return self.matrix[self.line_forklift][self.column_forklift - 1] == constants.EMPTY
+        #can move left if the column to the left of the forklift is empty and is not null (not out of bounds)
+        if self.column_forklift != 0:
+            return self.matrix[self.line_forklift][self.column_forklift - 1] == constants.EMPTY
+        return False
 
     def move_up(self) -> None:
         self.matrix[self.line_forklift][self.column_forklift] = constants.EMPTY
