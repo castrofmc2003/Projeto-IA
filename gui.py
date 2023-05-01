@@ -622,24 +622,29 @@ class SearchSolver(threading.Thread):
     def run(self):
         # TODO calculate pairs distances
 
-
         # do the cicle for to calculate pairs distances
+        for pair in self.agent.pairs:
+            cell1 = copy.deepcopy(pair.cell1)
+            cell2 = copy.deepcopy(pair.cell2)
 
+            # se a cell1 for forklift alterar a posicao da cell2
+            state = copy.deepcopy(self.agent.initial_environment)
+            if state.matrix[cell1.line][cell1.column] == constants.FORKLIFT:
 
-
-        # # alterar as coordenadas da cell 1 se for diferente de um agent
-        # state = self.agent.problem.initial
-        # state.warehouse.cells[cell1[0]][cell1[1]] = Cell(cell1[0], cell1[1], constants.EMPTY)
-        #
-        # # alterar as coordenadas da cell 2 se for diferente da porta
-        # problem = WarehouseProblemSearch(state, cell2)
-        #
-        # solution = self.agent.solve_problem(problem)
-        #
-        # p.value = solution.cost()
-        #
-        # self.text_problem.delete("1.0", "end")
-        # self.text_problem.insert(tk.END, str(self.agent))
+                if state.matrix[cell2.line][cell2.column - 1] == constants.SHELF:
+                    problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column + 1))
+                else:
+                    problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column - 1))
+            else:
+                if state.matrix[cell2.line][cell2.column] == constants.EXIT:
+                    problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column))
+                else:
+                    if state.matrix[cell2.line][cell2.column - 1] == constants.SHELF:
+                        problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column + 1))
+                    else:
+                        problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column - 1))
+            solution = self.agent.solve_problem(problem)
+            pair.value = solution.cost
 
         self.agent.search_method.stopped=True
         self.gui.problem_ga = WarehouseProblemGA(self.agent)
@@ -662,7 +667,6 @@ class SolutionRunner(threading.Thread):
         self.thread_running = False
 
     def run(self):
-
         self.thread_running = True
         forklift_path, steps = self.best_in_run.obtain_all_path()
         old_cell = [None] * len(forklift_path)
