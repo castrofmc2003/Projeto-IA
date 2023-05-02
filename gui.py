@@ -621,32 +621,41 @@ class SearchSolver(threading.Thread):
 
     def run(self):
         # TODO calculate pairs distances
-
+        state = copy.copy(self.agent.initial_environment)
         # do the cicle for to calculate pairs distances
         for pair in self.agent.pairs:
             cell1 = copy.deepcopy(pair.cell1)
             cell2 = copy.deepcopy(pair.cell2)
 
-            # se a cell1 for forklift alterar a posicao da cell2
-            state = copy.deepcopy(self.agent.initial_environment)
-            if state.matrix[cell1.line][cell1.column] == constants.FORKLIFT:
+            #se a cell1 nao for forklift, ver qual dos lados da cell1 tem uma cell vazia e alterar a posicao do forklift
+            if state.matrix[cell1.line][cell1.column] != constants.FORKLIFT:
+                state.matrix[state.line_forklift][state.column_forklift] = constants.EMPTY
+                state.line_forklift = cell1.line
+                if state.matrix[cell1.line][cell1.column - 1] == constants.SHELF or cell1.column == 0:
+                    state.matrix[cell1.line][cell1.column + 1] = constants.FORKLIFT
+                    state.column_forklift = cell1.column + 1
+                elif state.matrix[cell1.line][cell1.column] == constants.EMPTY:
+                    state.matrix[cell1.line][cell1.column] = constants.FORKLIFT
+                    state.column_forklift = cell1.column
+                else:
+                    state.matrix[cell1.line][cell1.column - 1] = constants.FORKLIFT
+                    state.column_forklift = cell1.column - 1
 
-                if state.matrix[cell2.line][cell2.column - 1] == constants.SHELF:
+
+            if state.matrix[cell2.line][cell2.column] == constants.EXIT:
+                problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column))
+            else:
+                if state.matrix[cell2.line][cell2.column - 1] == constants.SHELF or cell2.column == 0:
                     problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column + 1))
                 else:
                     problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column - 1))
-            else:
-                if state.matrix[cell2.line][cell2.column] == constants.EXIT:
-                    problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column))
-                else:
-                    if state.matrix[cell2.line][cell2.column - 1] == constants.SHELF:
-                        problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column + 1))
-                    else:
-                        problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column - 1))
             solution = self.agent.solve_problem(problem)
             pair.value = solution.cost
 
+
         self.agent.search_method.stopped=True
+        self.gui.text_problem.delete("1.0", "end")
+        self.gui.text_problem.insert(tk.END, self.agent.initial_environment.__str__() + '\n\n' + self.agent.__str__())
         self.gui.problem_ga = WarehouseProblemGA(self.agent)
         self.gui.manage_buttons(data_set=tk.NORMAL, runSearch=tk.DISABLED, runGA=tk.NORMAL, stop=tk.DISABLED,
                                 open_experiments=tk.NORMAL, run_experiments=tk.DISABLED, stop_experiments=tk.DISABLED,
