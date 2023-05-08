@@ -12,45 +12,36 @@ class WarehouseState(State[Action]):
     def __init__(self, matrix: ndarray, rows, columns):
         super().__init__()
 
+#sao inicializadas enquanto correm
         self.line_forklift = None
         self.column_forklift = None
 
         self.rows = rows
         self.columns = columns
-        self.matrix = np.full([self.rows, self.columns], fill_value=0, dtype=int)
-
-        for i in range(self.rows):
-            for j in range(self.columns):
-                self.matrix[i][j] = matrix[i][j]
-                if self.matrix[i][j] == constants.FORKLIFT:
-                    self.line_forklift = i
-                    self.column_forklift = j
-                if self.matrix[i][j] == constants.EXIT:
-                    self.line_exit = i
-                    self.column_exit = j
+        self.matrix = matrix
 
     def can_move_up(self) -> bool:
         #can move up if the line above the forklift is empty and is not null (not out of bounds)
         if self.line_forklift != 0:
-            return self.matrix[self.line_forklift - 1][self.column_forklift] == constants.EMPTY or self.matrix[self.line_forklift - 1][self.column_forklift] == constants.EXIT
+            return self.matrix[self.line_forklift - 1][self.column_forklift] != constants.SHELF and self.matrix[self.line_forklift - 1][self.column_forklift] != constants.PRODUCT
         return False
 
     def can_move_right(self) -> bool:
         #can move right if the column to the right of the forklift is empty and is not null (not out of bounds)
         if self.column_forklift != self.columns - 1:
-            return self.matrix[self.line_forklift][self.column_forklift + 1] == constants.EMPTY or self.matrix[self.line_forklift][self.column_forklift + 1] == constants.EXIT
+            return self.matrix[self.line_forklift][self.column_forklift + 1] != constants.SHELF and self.matrix[self.line_forklift][self.column_forklift + 1] != constants.PRODUCT
         return False
 
     def can_move_down(self) -> bool:
         #can move down if the line below the forklift is empty and is not null (not out of bounds)
         if self.line_forklift != self.rows - 1:
-            return self.matrix[self.line_forklift + 1][self.column_forklift] == constants.EMPTY or self.matrix[self.line_forklift + 1][self.column_forklift] == constants.EXIT
+            return self.matrix[self.line_forklift + 1][self.column_forklift] != constants.SHELF and self.matrix[self.line_forklift + 1][self.column_forklift] != constants.PRODUCT
         return False
 
     def can_move_left(self) -> bool:
         #can move left if the column to the left of the forklift is empty and is not null (not out of bounds)
         if self.column_forklift != 0:
-            return self.matrix[self.line_forklift][self.column_forklift - 1] == constants.EMPTY or self.matrix[self.line_forklift][self.column_forklift - 1] == constants.EXIT
+            return self.matrix[self.line_forklift][self.column_forklift - 1] != constants.SHELF and self.matrix[self.line_forklift][self.column_forklift - 1] != constants.PRODUCT
         return False
 
     def move_up(self) -> None:
@@ -74,8 +65,7 @@ class WarehouseState(State[Action]):
         self.matrix[self.line_forklift][self.column_forklift] = constants.FORKLIFT
 
     def get_cell_color(self, row: int, column: int) -> Color:
-        if row == self.line_exit and column == self.column_exit and (
-                row != self.line_forklift or column != self.column_forklift):
+        if self.matrix[row][column] == constants.EXIT:
             return constants.COLOREXIT
 
         if self.matrix[row][column] == constants.PRODUCT_CATCH:
@@ -95,7 +85,7 @@ class WarehouseState(State[Action]):
         matrix_string = str(self.rows) + " " + str(self.columns) + "\n"
         for row in self.matrix:
             for column in row:
-                matrix_string += str(column) + " "
+                matrix_string += str(int(column)) + " "
             matrix_string += "\n"
         return matrix_string
 

@@ -46,8 +46,10 @@ class GraphSearch(SearchMethod, Generic[T]):
                 return Solution(problem, node)
             self._explored.add(state)
             actions = problem.get_actions(state)
+            print(state)
             for action in actions:
                 successor = problem.get_successor(state, action)
+                print (successor)
                 self.add_successor_to_frontier(successor, node)
             self.compute_statistics(len(actions))
 
