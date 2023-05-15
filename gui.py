@@ -644,8 +644,6 @@ class SearchSolver(threading.Thread):
                 else:
                     problem = WarehouseProblemSearch(state, Cell(cell2.line, cell2.column + 1))
             solution = self.agent.solve_problem(problem)
-            if (cell1.line == 4 and cell1.column == 1):
-                print(pair, state.line_forklift, state.column_forklift, problem.goal_position, solution.actions)
             pair.value = solution.cost
 
 

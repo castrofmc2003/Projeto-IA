@@ -8,6 +8,8 @@ class WarehouseIndividual(IntVectorIndividual):
 
     def compute_fitness(self) -> float:
         # TODO
+        # divisores para o genoma
+
         return 0
 
     def obtain_all_path(self):
