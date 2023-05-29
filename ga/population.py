@@ -16,7 +16,7 @@ class Population:
 
     def evaluate(self) -> Individual:
         for ind in self.individuals:
-            ind.compute_fitness()
+            ind.compute_fitness
             if self.best_individual is None or ind.better_than(self.best_individual):
                 self.best_individual = ind
         return self.best_individual

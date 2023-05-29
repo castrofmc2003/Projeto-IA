@@ -30,7 +30,6 @@ class WarehouseAgentSearch(Agent):
                 elif environment.matrix[i][j] == constants.PRODUCT:
                     self.products.append(Cell(i, j))
 
-
         for a in self.forklifts:
             for p in self.products:
                 self.pairs.append(Pair(a, p))
@@ -44,6 +43,15 @@ class WarehouseAgentSearch(Agent):
 
         for a in self.forklifts:
             self.pairs.append(Pair(a, self.exit))
+
+
+    def get_pair(self, cell1: Cell, cell2: Cell) -> int:
+        for pair in self.pairs:
+            if pair.cell1 == cell1 and pair.cell2 == cell2:
+                return pair
+            elif pair.cell1 == cell2 and pair.cell2 == cell1:
+                return pair
+
 
     def __str__(self) -> str:
         str = "Pairs:\n"

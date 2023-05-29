@@ -9,11 +9,11 @@ class WarehouseProblemGA(Problem):
         self.forklifts = agent_search.forklifts
         self.products = agent_search.products
         self.agent_search = agent_search
+        self.fitness = 0
 
     def generate_individual(self) -> "WarehouseIndividual":
-        new_individual = WarehouseIndividual(self.forklifts, self.products)
+        return WarehouseIndividual(self, len(self.products)+len(self.forklifts)-1)
 
-        return new_individual
 
 
     def __str__(self):

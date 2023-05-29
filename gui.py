@@ -319,7 +319,7 @@ class Window(tk.Tk):
             Recombination2(float(self.entry_recombination_prob.get())) if recombination_methods_index == 1 else \
                 Recombination3(float(self.entry_recombination_prob.get()))
 
-        mutation_methods_index = self.combo_recombination_methods.current()
+        mutation_methods_index = self.combo_mutation_methods.current()
         mutation_method = MutationInsert(
             float(self.entry_mutation_prob.get())) if mutation_methods_index == 0 else \
             Mutation2(float(self.entry_mutation_prob.get())) if mutation_methods_index == 1 else \
@@ -627,7 +627,7 @@ class SearchSolver(threading.Thread):
             cell1 = copy.copy(pair.cell1)
             cell2 = copy.copy(pair.cell2)
 
-            #if state.matrix[cell2.line][cell2.column] == constants.FORKLIFT:
+
             state.line_forklift = cell1.line
             if cell1 in self.agent.forklifts:
                 state.column_forklift = cell1.column
@@ -692,7 +692,6 @@ class SolutionRunner(threading.Thread):
                     old_cell[j] = new_cell
                 else:
                     self.state.matrix[old_cell[j].line][old_cell[j].column] = constants.FORKLIFT
-
                 # TODO put the catched products in black
             self.gui.queue.put((copy.deepcopy(self.state), step, False))
         self.gui.queue.put((None, steps, True))  # Done
