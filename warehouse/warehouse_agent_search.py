@@ -45,13 +45,22 @@ class WarehouseAgentSearch(Agent):
             self.pairs.append(Pair(a, self.exit))
 
 
-    def get_pair(self, cell1: Cell, cell2: Cell) -> int:
+    def get_value(self, cell1: Cell, cell2: Cell) -> int:
         for pair in self.pairs:
             if pair.cell1 == cell1 and pair.cell2 == cell2:
-                return pair
+                return pair.value
             elif pair.cell1 == cell2 and pair.cell2 == cell1:
-                return pair
+                return pair.value
 
+    def get_cells(self, cell1: Cell, cell2: Cell) -> int:
+        for pair in self.pairs:
+            if pair.cell1 == cell1 and pair.cell2 == cell2:
+                return pair.cells
+            elif pair.cell1 == cell2 and pair.cell2 == cell1:
+                cellsInverse = []
+                for cell in pair.cells:
+                    cellsInverse.insert(0,cell)
+                return cellsInverse
 
     def __str__(self) -> str:
         str = "Pairs:\n"

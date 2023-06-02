@@ -5,6 +5,7 @@ class Pair:
         self.cell1 = cell1
         self.cell2 = cell2
         self.value = 0
+        self.cells = None;
         #TODO
 
     def hash(self):

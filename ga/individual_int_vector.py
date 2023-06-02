@@ -13,7 +13,7 @@ class IntVectorIndividual(Individual):
         #TODO: initialize the genome with random values without repetitions startint from 1 to 3
         self.genome = np.arange(1,num_genes+1)
         np.random.shuffle(self.genome)
-        #print(self.genome)
+        # print(self.genome)
 
     def swap_genes(self, other, index: int):
         aux = self.genome[index]
