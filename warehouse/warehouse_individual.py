@@ -1,6 +1,7 @@
 import copy
 
 from ga.individual_int_vector import IntVectorIndividual
+from warehouse.cell import Cell
 
 
 class WarehouseIndividual(IntVectorIndividual):
@@ -10,100 +11,104 @@ class WarehouseIndividual(IntVectorIndividual):
         self.forklifts = problem.forklifts
         self.products = problem.products
         self.path = []
+        self.fitness = 0
+        self.forklift_path = []
+
 
     @property
     def compute_fitness(self, j=None) -> float:
         forklifts = self.problem.forklifts
         products = self.problem.products
         agent_search = self.problem.agent_search
-        path = [forklifts[0]]
 
-        num_forklift = 0
         fitness = 0
         genome_length = len(self.genome)
-        #optimizar isto
-        if self.genome[0] <= len(products):
-            fitness += agent_search.get_pair(forklifts[num_forklift], products[self.genome[0] - 1]).value
-            prod_fork = 1  # 0 - forklift (previous element), 1 - product
-        else:
-            fitness += agent_search.get_pair(forklifts[num_forklift], agent_search.exit).value
-            num_forklift += 1
-            prod_fork = 0  # 0 - forklift (previous element), 1 - product
-        for i in range(1,genome_length - 1):
-            current_gene = self.genome[i]
-            if current_gene <= len(products):
-                if prod_fork == 1:
-                    fitness += agent_search.get_pair(products[self.genome[i - 1] - 1], products[current_gene - 1]).value
+        path = []
+        num_products = len(products)
+        j = 0
+        for i in range(len(forklifts)):
+            forklift_path = [forklifts[i]]
+            while j < genome_length:
+                if self.genome[j] <= num_products:
+                    forklift_path.append(products[self.genome[j] - 1])
+                    j += 1
                 else:
-                    fitness += agent_search.get_pair(forklifts[num_forklift], products[current_gene - 1]).value
-                prod_fork = 1
-            else:
-                if prod_fork == 1:
-                    fitness += agent_search.get_pair(products[self.genome[i - 1] - 1], agent_search.exit).value
-                else:
-                    fitness += agent_search.get_pair(forklifts[num_forklift], agent_search.exit).value
-                num_forklift += 1
-                prod_fork = 0
+                    j += 1
+                    break
+            forklift_path.append(agent_search.exit)
+            path.append(forklift_path)
 
-        last_gene = self.genome[genome_length - 1]
-        prev_last_gene = self.genome[genome_length - 2]
+        for i in range(len(path)):
+            for j in range(len(path[i]) - 1):
+                fitness += agent_search.get_value(path[i][j], path[i][j + 1])
 
-        if last_gene <= len(products):
-            if prod_fork == 1:
-                fitness += agent_search.get_pair(products[prev_last_gene - 1], products[last_gene - 1]).value
-                fitness += agent_search.get_pair(products[last_gene - 1], agent_search.exit).value
-            else:
-                fitness += agent_search.get_pair(forklifts[num_forklift], products[last_gene - 1]).value
-                fitness += agent_search.get_pair(products[last_gene - 1], agent_search.exit).value
-        else:
-            num_forklift += 1
-            if prod_fork == 1:
-                fitness += agent_search.get_pair(products[prev_last_gene - 1], agent_search.exit).value
-                fitness += agent_search.get_pair(forklifts[num_forklift], agent_search.exit).value
-            else:
-                fitness += agent_search.get_pair(forklifts[num_forklift - 1], agent_search.exit).value
-                fitness += agent_search.get_pair(forklifts[num_forklift], agent_search.exit).value
-
-
+        self.path = path
         self.fitness = fitness
-        # self.path = path
-        # for cell in path:
-        #     print(cell)
-        # print("END")
         return self.fitness
+
+
 
     '''
     colisoes no obtain allpath
-    return forklifts_path, max_steps
-    path -> lista de todas as cells por onde o forklift passou
-    guardar cells por onde o forklift passou no pair 
-    solution -> devolver todas as cells entre cada par
+    #return forklifts_path, max_steps
+    #forklifts_path[i][j]
+    #path -> lista de todas as cells por onde o forklift passou
+    #guardar cells por onde o forklift passou no pair 
+    #solution -> devolver todas as cells entre cada par
     ==================================
-    guardar a posicao inicial do forklift 
-    ao correr as cells, verificar se o produto inicial é superior ao outro, e percorrer as cells do fim pro inicio
+    #guardar a posicao inicial do forklift 
+    #ao correr as cells, verificar se o produto inicial é superior ao outro, e percorrer as cells do fim pro inicio
+    #path para cada forklift ... ?
     '''
+
+
+    @property
     def obtain_all_path(self):
-        pass
-        # path = []
-        # state = copy.copy(self.problem.agent_search.initial_environment)
-        # for cell in range (len(self.genome)):
-        #     state.line_forklift = self.problem.forklifts[gene]
-        #     state.column_forklift = self.problem.forklifts[gene]
-        #     if self.genome[gene + 1] <= len(self.problem.products):
-        #         goal_position = self.problem.product_positions[gene]
-        #     else:
-        #         goal_position = self.problem.agent_search.exit
-        #     agent_path = self.problem.agent_search.solve_problem(state, goal_position)
-        #     path.extend(agent_path.get_actions())
-        # return path
+        forklift_pairs = []
+        path =[]
+        max_steps = 0
+        forklift_path = []
+        genome_length = len(self.genome)
+        num_products = len(self.problem.products)
+        j = 0
+        # for i in range(len(self.problem.forklifts)):
+        #     #inicializacao do path com a posicao inicial do forklift
+        #     forklift_path = [self.problem.forklifts[i]]
+        #     while j < genome_length:
+        #         if self.genome[j] <= num_products:
+        #             # append dos produtos para cada forklift
+        #             forklift_path.append(self.problem.products[self.genome[j] - 1])
+        #             j += 1
+        #         else:
+        #             j += 1
+        #             break
+        #     #append da saida para cada forklift
+        #     forklift_path.append(self.problem.agent_search.exit)
+        #     #append da lista de cada forklift
+        #     path.append(forklift_path)
+        self.forklift_path = []
+        for i in range(len(self.path)):
+            forklift_path=[self.path[i][0]]
+            for j in range(len(self.path[i]) - 1):
+                #obter todas as cells entre cada par
+                for cell in self.problem.agent_search.get_cells(self.path[i][j], self.path[i][j + 1]):
+                    if not(cell.__eq__(forklift_path[len(forklift_path)-1])):
+                        forklift_path.append(cell)
+
+            self.forklift_path.append(forklift_path)
+            max_steps = len(forklift_path) if len(forklift_path) > max_steps else max_steps
+        return self.forklift_path, max_steps
+
 
     def __str__(self):
         string = 'Fitness: ' + f'{self.fitness}' + '\n'
         string += str (self.genome) + "\n\n"
-        # TODO
-        #numero de  passos de cada forklift
-        # for i in range(len(self.forklifts)):
 
+        for i in range(len(self.forklifts)):
+            string +=  "Nºprodutos apanhados pelo " + str(i + 1) + "ºForklift: "+str(len(self.path[i])-2) + "\n ["
+            for j in range(1,len(self.path[i])-1):
+                string +="("+  str(self.path[i][j]) + ")"
+            string += "]" + "\n"
         return string
 
     def better_than(self, other: "WarehouseIndividual") -> bool:
@@ -114,5 +119,8 @@ class WarehouseIndividual(IntVectorIndividual):
         new_instance = self.__class__(self.problem, self.num_genes)
         new_instance.genome = self.genome.copy()
         new_instance.fitness = self.fitness
+        new_instance.path = self.path.copy()
+        new_instance.forklift_path = self.forklift_path.copy()
         # TODO
+
         return new_instance

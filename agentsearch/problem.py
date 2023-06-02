@@ -5,6 +5,7 @@ from typing import Generic, TypeVar
 from agentsearch.state import State
 from agentsearch.action import Action
 
+
 S = TypeVar("S", bound=State)
 
 
@@ -31,5 +32,6 @@ class Problem(ABC, Generic[S]):
         for action in path:
             cost += action.cost
         return cost
+
 
 
