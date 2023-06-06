@@ -693,12 +693,10 @@ class SolutionRunner(threading.Thread):
                     old_cell[j] = new_cell
                 else:
                     self.state.matrix[old_cell[j].line][old_cell[j].column] = constants.FORKLIFT
-                if new_cell.column != self.state.columns - 1:
-                    if self.state.matrix[new_cell.line][new_cell.column + 1]  == constants.PRODUCT :
-                        self.state.matrix[new_cell.line][new_cell.column + 1]  = constants.PRODUCT_CATCH
-                if new_cell.column != 0:
-                    if self.state.matrix[new_cell.line][new_cell.column - 1] == constants.PRODUCT:
-                        self.state.matrix[new_cell.line][new_cell.column - 1] = constants.PRODUCT_CATCH
+                if new_cell.column != 0 and self.state.matrix[new_cell.line][new_cell.column - 1] == constants.PRODUCT:
+                    self.state.matrix[new_cell.line][new_cell.column - 1] = constants.PRODUCT_CATCH
+                if new_cell.column != len(self.state.matrix[0]) - 1 and self.state.matrix[new_cell.line][new_cell.column + 1] == constants.PRODUCT:
+                    self.state.matrix[new_cell.line][new_cell.column + 1] = constants.PRODUCT_CATCH
             self.gui.queue.put((copy.deepcopy(self.state), step, False))
         self.gui.queue.put((None, steps, True))
 

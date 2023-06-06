@@ -1,5 +1,6 @@
 import numpy as np
 
+from ga.genetic_algorithm import GeneticAlgorithm
 from ga.individual_int_vector import IntVectorIndividual
 from ga.genetic_operators.mutation import Mutation
 
@@ -10,10 +11,10 @@ class Mutation2(Mutation):
     def mutate(self, ind: IntVectorIndividual) -> None:
         # Scramble mutation
         num_genes = len(ind.genome)
-        cut1 = np.random.randint(0, num_genes - 1)
+        cut1 = GeneticAlgorithm.rand.randint(0, num_genes - 1)
         cut2 = cut1
         while (cut1 == cut2):
-            cut2 = np.random.randint(0, num_genes - 1)
+            cut2 = GeneticAlgorithm.rand.randint(0, num_genes - 1)
 
         if cut1 > cut2:
             cut1, cut2 = cut2, cut1
