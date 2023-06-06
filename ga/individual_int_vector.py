@@ -3,6 +3,7 @@ from abc import abstractmethod
 
 import numpy as np
 
+from ga.genetic_algorithm import GeneticAlgorithm
 from ga.problem import Problem
 from ga.individual import Individual
 
@@ -12,7 +13,7 @@ class IntVectorIndividual(Individual):
         super().__init__(problem, num_genes)
         #TODO: initialize the genome with random values without repetitions startint from 1 to 3
         self.genome = np.arange(1,num_genes+1)
-        np.random.shuffle(self.genome)
+        GeneticAlgorithm.rand.shuffle(self.genome)
         # print(self.genome)
 
     def swap_genes(self, other, index: int):

@@ -16,7 +16,7 @@ class Recombination3(Recombination):
         offspring2 = [-1] * size
 
         # Select a random index to start the cycle
-        index = np.random.randint(0, size - 1)
+        index = GeneticAlgorithm.rand.randint(0, size - 1)
         indexInic = index
         # Add the first element to the offspring
         offspring1[index] = ind1.genome[index]
