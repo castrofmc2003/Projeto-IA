@@ -10,6 +10,7 @@ class MutationInsert(Mutation):
 
 
     def mutate(self, ind: IntVectorIndividual) -> None:
+        #invert mutation*
         num_genes = len(ind.genome)
         cut1 = GeneticAlgorithm.rand.randint(0, num_genes - 1)
         cut2 = cut1

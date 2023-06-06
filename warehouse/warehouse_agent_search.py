@@ -52,15 +52,12 @@ class WarehouseAgentSearch(Agent):
             elif pair.cell1 == cell2 and pair.cell2 == cell1:
                 return pair.value
 
-    def get_cells(self, cell1: Cell, cell2: Cell) -> int:
+    def get_cells(self, cell1: Cell, cell2: Cell) -> list:
         for pair in self.pairs:
             if pair.cell1 == cell1 and pair.cell2 == cell2:
                 return pair.cells
             elif pair.cell1 == cell2 and pair.cell2 == cell1:
-                cellsInverse = []
-                for cell in pair.cells:
-                    cellsInverse.insert(0,cell)
-                return cellsInverse
+                return pair.cells[::-1]
 
     def __str__(self) -> str:
         str = "Pairs:\n"

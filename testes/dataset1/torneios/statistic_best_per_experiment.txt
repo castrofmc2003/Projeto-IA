@@ -1,0 +1,84 @@
+
+Population size: 20
+Max generations: 20
+Selection: Tournament selection(2)
+Recombination: PMX recombination (0.7)
+Mutation:Insert Mutation (0.01)
+Fitness: 14
+[3, 2, 1]
+
+Nºprodutos apanhados pelo 1ºForklift: 3
+ [(3-1)(2-2)(1-4)]
+
+
+# --------------------------------------------------------------
+
+Population size: 20
+Max generations: 20
+Selection: Tournament selection(4)
+Recombination: PMX recombination (0.7)
+Mutation:Insert Mutation (0.01)
+Fitness: 14
+[3 2 1]
+
+Nºprodutos apanhados pelo 1ºForklift: 3
+ [(3-1)(2-2)(1-4)]
+
+
+# --------------------------------------------------------------
+
+Population size: 20
+Max generations: 20
+Selection: Tournament selection(6)
+Recombination: PMX recombination (0.7)
+Mutation:Insert Mutation (0.01)
+Fitness: 14
+[3, 2, 1]
+
+Nºprodutos apanhados pelo 1ºForklift: 3
+ [(3-1)(2-2)(1-4)]
+
+
+# --------------------------------------------------------------
+
+Population size: 20
+Max generations: 20
+Selection: Tournament selection(7)
+Recombination: PMX recombination (0.7)
+Mutation:Insert Mutation (0.01)
+Fitness: 14
+[3, 2, 1]
+
+Nºprodutos apanhados pelo 1ºForklift: 3
+ [(3-1)(2-2)(1-4)]
+
+
+# --------------------------------------------------------------
+
+Population size: 20
+Max generations: 20
+Selection: Tournament selection(8)
+Recombination: PMX recombination (0.7)
+Mutation:Insert Mutation (0.01)
+Fitness: 14
+[3, 2, 1]
+
+Nºprodutos apanhados pelo 1ºForklift: 3
+ [(3-1)(2-2)(1-4)]
+
+
+# --------------------------------------------------------------
+
+Population size: 20
+Max generations: 20
+Selection: Tournament selection(10)
+Recombination: PMX recombination (0.7)
+Mutation:Insert Mutation (0.01)
+Fitness: 14
+[3, 2, 1]
+
+Nºprodutos apanhados pelo 1ºForklift: 3
+ [(3-1)(2-2)(1-4)]
+
+
+# --------------------------------------------------------------
