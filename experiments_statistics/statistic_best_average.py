@@ -22,7 +22,7 @@ class StatisticBestAverage(GAListener, ExperimentListener):
     def run_ended(self, ga_event: GAEvent) -> None:
         self.values[self.run] = ga_event.best.fitness
         self.run += 1
-        print(ga_event.best.fitness)
+        #print(ga_event.best.fitness)
 
     def experiment_ended(self, experiment_event: ExperimentEvent) -> None:
         average = np.average(self.values)
