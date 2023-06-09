@@ -673,7 +673,7 @@ class SolutionRunner(threading.Thread):
 
     def run(self):
         self.thread_running = True
-        forklift_path, steps = self.best_in_run.obtain_all_path
+        forklift_path, steps, path = self.best_in_run.obtain_all_path
         old_cell = [None] * len(forklift_path)
         new_cells = []
         for step in range(steps - 1):
@@ -693,10 +693,11 @@ class SolutionRunner(threading.Thread):
                     old_cell[j] = new_cell
                 else:
                     self.state.matrix[old_cell[j].line][old_cell[j].column] = constants.FORKLIFT
-                if new_cell.column != 0 and self.state.matrix[new_cell.line][new_cell.column - 1] == constants.PRODUCT:
-                    self.state.matrix[new_cell.line][new_cell.column - 1] = constants.PRODUCT_CATCH
-                if new_cell.column != len(self.state.matrix[0]) - 1 and self.state.matrix[new_cell.line][new_cell.column + 1] == constants.PRODUCT:
-                    self.state.matrix[new_cell.line][new_cell.column + 1] = constants.PRODUCT_CATCH
+                for k in range(len(path[j][1:-1])):
+                    if new_cell.column != 0 and self.state.matrix[new_cell.line][new_cell.column - 1] == constants.PRODUCT and path[j][k].__eq__(Cell(new_cell.line,new_cell.column - 1)):
+                        self.state.matrix[new_cell.line][new_cell.column - 1] = constants.PRODUCT_CATCH
+                    if new_cell.column != len(self.state.matrix[0]) - 1 and self.state.matrix[new_cell.line][new_cell.column + 1] == constants.PRODUCT and path[j][k].__eq__(Cell(new_cell.line,new_cell.column + 1)):
+                        self.state.matrix[new_cell.line][new_cell.column + 1] = constants.PRODUCT_CATCH
             self.gui.queue.put((copy.deepcopy(self.state), step, False))
         self.gui.queue.put((None, steps, True))
 

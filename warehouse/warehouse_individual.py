@@ -35,6 +35,7 @@ class WarehouseIndividual(IntVectorIndividual):
         num_forklifts = len(forklifts)
         num_products = len(products)
         j = 0
+
         for i in range(len(forklifts)):
             forklift_path = [forklifts[i]]
             while j < genome_length:
@@ -47,16 +48,6 @@ class WarehouseIndividual(IntVectorIndividual):
             forklift_path.append(agent_search.exit)
             self.path.append(forklift_path)
 
-        # se algum forklift apanhar muito menos produtos que os outros
-        for i in range(num_forklifts - 1):
-            for j in range(i + 1, num_forklifts):
-                # len(path) - 2 = numero de produtos apanhados por forklift (exclui a posicao inicial e final)
-                if len(self.path[i]) < (len(self.path[j]))/num_forklifts:
-                    penalty += int(len(self.path[j])/num_forklifts)
-                elif len(self.path[j]) < (len(self.path[i]))/num_forklifts:
-                    penalty += int(len(self.path[i])/num_forklifts)
-
-
         # guarda todas as cells por onde o forklift passou
         self.forklift_path = []
         for i in range(num_forklifts):
@@ -68,13 +59,26 @@ class WarehouseIndividual(IntVectorIndividual):
                         forklift_path.append(cell)
 
             self.forklift_path.append(forklift_path)
-            self.max_steps = len(forklift_path) if len(forklift_path) > self.max_steps else self.max_steps
 
+        # se algum forklift apanhar muito menos produtos que os outros
+        for i in range(num_forklifts - 1):
+            for j in range(i + 1, num_forklifts):
+                # len(path) - 2 = numero de produtos apanhados por forklift (exclui a posicao inicial e final)
+                if len(self.path[i]) < (len(self.path[j])) / num_forklifts:
+                    penalty += int(len(self.path[j]) / num_forklifts)
+                elif len(self.path[j]) < (len(self.path[i])) / num_forklifts:
+                    penalty += int(len(self.path[i]) / num_forklifts)
+                #se um forklift tiver muitos mais steps do q os outros
+                if len(self.forklift_path[i])/len(self.forklifts) > len(self.forklift_path[j]):
+                    penalty += len(self.forklift_path[i]) / len(self.forklifts)
+                elif len(self.forklift_path[i]) < len(self.forklift_path[j])/len(self.forklifts):
+                    penalty += len(self.forklift_path[j])/len(self.forklifts)
         # colisoes
         #num_forklifts = len(path) pq cada forklift tem uma lista de cells
         for i in range (num_forklifts - 1):
-            for j in range (len(self.forklift_path[i])-1):
-                for k in range(i+1, num_forklifts):
+            for k in range(i + 1, num_forklifts):
+                for j in range (len(self.forklift_path[i])-1):
+
                     if j >= len(self.forklift_path[k])-1:
                         break
                     if self.forklift_path[i][j].__eq__(self.forklift_path[k][j]):
@@ -88,32 +92,16 @@ class WarehouseIndividual(IntVectorIndividual):
         for i in range(num_forklifts):
             for j in range(len(self.path[i]) - 1):
                 self.fitness += agent_search.get_value(self.path[i][j], self.path[i][j + 1])
-        if self.max_steps > self.fitness/(num_forklifts):
-            penalty += self.max_steps - int(self.fitness/num_forklifts)
-        # self.path = path
-        # self.fitness = fitness
         self.fitness += penalty
         return self.fitness
 
 
-
-    '''
-    colisoes no obtain allpath
-    #return forklifts_path, max_steps
-    #forklifts_path[i][j]
-    #path -> lista de todas as cells por onde o forklift passou
-    #guardar cells por onde o forklift passou no pair 
-    #solution -> devolver todas as cells entre cada par
-    ==================================
-    #guardar a posicao inicial do forklift 
-    #ao correr as cells, verificar se o produto inicial é superior ao outro, e percorrer as cells do fim pro inicio
-    #path para cada forklift ... ?
-    '''
-
-
     @property
     def obtain_all_path(self):
-        return self.forklift_path, self.max_steps
+        self.max_steps = 0
+        for i in range(len(self.forklifts)):
+            self.max_steps = max(len(self.forklift_path[i]), self.max_steps)
+        return self.forklift_path, self.max_steps,self.path
 
 
     def __str__(self):
@@ -138,6 +126,4 @@ class WarehouseIndividual(IntVectorIndividual):
         new_instance.path = self.path.copy()
         new_instance.forklift_path = self.forklift_path.copy()
         new_instance.max_steps = self.max_steps
-        # TODO
-
         return new_instance
