@@ -106,7 +106,7 @@ class WarehouseIndividual(IntVectorIndividual):
 
     def __str__(self):
         string = 'Fitness: ' + f'{self.fitness}' + '\n'
-        string += str (self.genome) + "\n\n"
+        string += str(self.genome) + "\n\n"
 
         for i in range(len(self.forklifts)):
             string +=  "Nºprodutos apanhados pelo " + str(i + 1) + "ºForklift: "+str(len(self.path[i])-2) + " Max Passos: " + str(len(self.forklift_path[i]) -1 )+ "\n ["
